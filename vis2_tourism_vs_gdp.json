@@ -1,0 +1,43 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Relationship between tourism receipts and GDP by country.",
+  "data": { "url": "data/world_tourism_economy_data.csv" },
+  "width": "container",
+  "height": 300,
+  "mark": { "type": "circle", "opacity": 0.7, "tooltip": true },
+  "encoding": {
+    "x": {
+      "field": "gdp",
+      "type": "quantitative",
+      "title": "GDP (current US$)",
+      "scale": { "type": "log" }
+    },
+    "y": {
+      "field": "tourism_receipts",
+      "type": "quantitative",
+      "title": "Tourism Receipts (US$)",
+      "scale": { "type": "log" }
+    },
+    "color": {
+      "field": "year",
+      "type": "ordinal",
+      "title": "Year"
+    },
+    "size": {
+      "field": "tourism_arrivals",
+      "type": "quantitative",
+      "title": "Arrivals (millions)",
+      "scale": { "range": [20, 500] }
+    },
+    "tooltip": [
+      { "field": "country", "type": "nominal" },
+      { "field": "year", "type": "ordinal" },
+      { "field": "tourism_receipts", "type": "quantitative" },
+      { "field": "gdp", "type": "quantitative" }
+    ]
+  },
+  "config": {
+    "view": { "stroke": "transparent" },
+    "legend": { "orient": "right" }
+  }
+}

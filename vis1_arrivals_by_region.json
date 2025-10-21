@@ -1,0 +1,35 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Trends of international tourist arrivals by region over time.",
+  "data": { "url": "data/international-tourist-arrivals-by-world-region.csv" },
+  "width": "container",
+  "height": 300,
+  "mark": {
+    "type": "area",
+    "interpolate": "monotone",
+    "opacity": 0.8
+  },
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "temporal",
+      "title": "Year"
+    },
+    "y": {
+      "field": "International Tourist Arrivals",
+      "type": "quantitative",
+      "title": "Number of Tourists"
+    },
+    "color": {
+      "field": "Entity",
+      "type": "nominal",
+      "title": "Region"
+    },
+    "tooltip": [
+      { "field": "Entity", "type": "nominal", "title": "Region" },
+      { "field": "Year", "type": "temporal" },
+      { "field": "International Tourist Arrivals", "type": "quantitative" }
+    ]
+  },
+  "config": { "legend": { "orient": "bottom" } }
+}

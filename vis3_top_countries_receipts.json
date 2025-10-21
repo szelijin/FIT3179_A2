@@ -1,0 +1,42 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Top 10 countries by tourism receipts in the latest available year.",
+  "data": { "url": "data/world_tourism_economy_data.csv" },
+  "transform": [
+    {
+      "aggregate": [{ "op": "mean", "field": "tourism_receipts", "as": "avg_receipts" }],
+      "groupby": ["country", "year"]
+    },
+    {
+      "window": [{ "op": "rank", "as": "rank" }],
+      "sort": [{ "field": "avg_receipts", "order": "descending" }]
+    },
+    { "filter": "datum.rank <= 10" }
+  ],
+  "width": "container",
+  "height": 300,
+  "mark": "bar",
+  "encoding": {
+    "y": {
+      "field": "country",
+      "type": "nominal",
+      "sort": "-x",
+      "title": "Country"
+    },
+    "x": {
+      "field": "avg_receipts",
+      "type": "quantitative",
+      "title": "Average Tourism Receipts (US$)"
+    },
+    "color": {
+      "field": "avg_receipts",
+      "type": "quantitative",
+      "title": "Receipts"
+    },
+    "tooltip": [
+      { "field": "country", "type": "nominal" },
+      { "field": "avg_receipts", "type": "quantitative" }
+    ]
+  },
+  "config": { "view": { "stroke": "transparent" } }
+}

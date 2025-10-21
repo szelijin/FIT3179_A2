@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Global Tourism Dashboard</title>
+
+  <!-- Vega & Vega-Lite -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
+
+</head>
+<body>
+  <div class="page">
+
+    <div class="pure-g">
+      <div class="pure-u-1-1">
+        <h1>🌍 Global Tourism Dashboard</h1>
+        <p>An interactive overview of international tourism trends across regions and economies.</p>
+      </div>
+    </div>
+
+    <!-- Visualization 1: Tourist arrivals by world region -->
+    <div class="pure-g">
+      <div class="pure-u-1-2">
+        <div class="description description-left">
+          <h2>Tourist Arrivals by Region (1995–2020)</h2>
+          <p>This area chart shows how international tourist arrivals evolved across different regions.</p>
+        </div>
+      </div>
+      <div class="pure-u-1-2">
+        <div id="vis1" class="vis-container"></div>
+      </div>
+    </div>
+
+    <!-- Visualization 2: Tourism receipts vs GDP -->
+    <div class="pure-g">
+      <div class="pure-u-2-3">
+        <div id="vis2" class="vis-container"></div>
+      </div>
+      <div class="pure-u-1-3">
+        <div class="description description-right">
+          <h2>Tourism Receipts vs GDP</h2>
+          <p>Explore how tourism revenue contributes to national GDP over the years.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visualization 3: Top tourism countries -->
+    <div class="pure-g">
+      <div class="pure-u-1-3">
+        <div class="description description-left">
+          <h2>Top 10 Countries by Tourism Receipts</h2>
+          <p>Which countries earned the most from international visitors?</p>
+        </div>
+      </div>
+      <div class="pure-u-2-3">
+        <div id="vis3" class="vis-container"></div>
+      </div>
+    </div>
+
+    <!-- Visualization 4: Departures vs Expenditures -->
+    <div class="pure-g">
+      <div class="pure-u-2-3">
+        <div id="vis4" class="vis-container"></div>
+      </div>
+      <div class="pure-u-1-3">
+        <div class="description description-right">
+          <h2>Departures vs Expenditures</h2>
+          <p>Analyze the relationship between outbound tourism and spending abroad.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visualization 5: Global Tourist Arrivals Map -->
+    <div class="pure-g">
+    <div class="pure-u-1-1">
+        <div class="description" style="text-align:center;">
+        <h2>🌐 Global Tourist Arrivals by Country</h2>
+        <p>Use the year slider to explore changes in international tourist arrivals across the world.</p>
+        </div>
+        <div id="mapVis" class="vis-container"></div>
+    </div>
+    </div>
+
+    <div class="pure-g">
+      <div class="pure-u-1-1 small-font">
+        <p>Data source: UNWTO | Built by <a href="#">Li Jin Sze</a></p>
+      </div>
+    </div>
+    
+    <!-- Visualization 6: GDP vs Tourism Receipts Scatterplot -->
+    <div class="pure-g">
+    <div class="pure-u-1-1">
+        <div class="description" style="text-align:center;">
+        <h2>💰 GDP vs Tourism Receipts (Major Countries)</h2>
+        <p>Bubble size shows tourist arrivals. Use the dropdown to select a year.</p>
+        </div>
+        <div id="scatterVis" class="vis-container"></div>
+    </div>
+    </div>
+
+    <!-- Visualization 5: Tourism GDP Proportion Bump Chart -->
+    <div class="pure-g">
+    <div class="pure-u-1-3">
+        <div class="description description-left">
+        <h2>Tourism GDP Proportion Ranking</h2>
+        <p>Tracks the top 10 countries where tourism contributes the most to GDP (2010-2020).</p>
+        </div>
+    </div>
+    <div class="pure-u-2-3">
+        <div id="vis5" class="vis-container"></div>
+    </div>
+    </div>
+
+
+  </div>
+
+  <script type="text/javascript">
+    const visFiles = [
+        ["#vis1", "tourism_area.json"],
+        ["#vis2", "vis2_tourism_vs_gdp.json"],
+        ["#vis3", "vis3_top_countries_receipts.json"],
+        ["#mapVis", "choropleth_map.vg.json"],
+        ["#scatterVis", "scatter_gdp_vs_receipts.json"],
+        ["#vis5", "gdp_proportion_bumpchart.json"]  // ← add this
+    ];
+
+  visFiles.forEach(v => {
+    vegaEmbed(v[0], v[1], { actions: false }).catch(console.error);
+  });
+</script>
+
+
+    visFiles.forEach(v => {
+        vegaEmbed(v[0], v[1], { actions: false }).catch(console.error);
+    });
+    </script>
+
+</body>
+</html>

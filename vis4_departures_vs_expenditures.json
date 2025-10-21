@@ -1,0 +1,32 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Relationship between tourism departures and expenditures per country.",
+  "data": { "url": "data/world_tourism_economy_data.csv" },
+  "width": "container",
+  "height": 300,
+  "mark": { "type": "point", "filled": true, "opacity": 0.8 },
+  "encoding": {
+    "x": {
+      "field": "tourism_departures",
+      "type": "quantitative",
+      "title": "Tourism Departures (millions)"
+    },
+    "y": {
+      "field": "tourism_expenditures",
+      "type": "quantitative",
+      "title": "Tourism Expenditures (US$)"
+    },
+    "color": {
+      "field": "region",
+      "type": "nominal",
+      "title": "Region",
+      "legend": { "orient": "bottom" }
+    },
+    "tooltip": [
+      { "field": "country", "type": "nominal" },
+      { "field": "tourism_departures", "type": "quantitative" },
+      { "field": "tourism_expenditures", "type": "quantitative" }
+    ]
+  },
+  "config": { "view": { "stroke": "transparent" } }
+}

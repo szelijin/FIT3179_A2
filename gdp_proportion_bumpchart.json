@@ -1,0 +1,90 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 500,
+  "title": "Top 10 Countries by Tourism GDP Proportion (2010-2020)",
+  "data": { "url": "data/gdp_proportion.csv" },
+
+  "transform": [
+    { "filter": "datum.Year >= 2010 && datum.Year <= 2020" },
+
+    {
+      "aggregate": [
+        {
+          "op": "mean",
+          "field": "Tourism GDP as a proportion of Total",
+          "as": "avg_prop"
+        }
+      ],
+      "groupby": ["Entity"]
+    },
+    {
+      "window": [{ "op": "rank", "as": "overall_rank" }],
+      "sort": [{ "field": "avg_prop", "order": "descending" }]
+    },
+    { "filter": "datum.overall_rank <= 10" },
+    {
+      "lookup": "Entity",
+      "from": {
+        "data": {
+          "url": "data/gdp_proportion.csv",
+          "format": { "type": "csv" }
+        },
+        "key": "Entity",
+        "fields": [
+          "Code",
+          "Year",
+          "Tourism GDP as a proportion of Total"
+        ]
+      },
+      "as": "records"
+    },
+    { "flatten": ["records"] },
+    { "calculate": "datum.records.Year", "as": "Year" },
+    {
+      "calculate": "datum.records['Tourism GDP as a proportion of Total']",
+      "as": "Tourism GDP as a proportion of Total"
+    },
+    { "filter": "datum.Year >= 2010 && datum.Year <= 2020" },
+    {
+      "window": [{ "op": "row_number", "as": "rank" }],
+      "sort": [
+        { "field": "Tourism GDP as a proportion of Total", "order": "descending" }
+      ],
+      "groupby": ["Year"]
+    }
+  ],
+
+  "mark": { "type": "line", "point": true, "strokeWidth": 3 },
+
+  "encoding": {
+    "x": {
+      "field": "Year",
+      "type": "ordinal",
+      "title": "Year",
+      "axis": { "labelAngle": 0 }
+    },
+    "y": {
+      "field": "rank",
+      "type": "ordinal",
+      "title": "Rank (1 = Highest)",
+      "sort": "ascending"
+    },
+    "color": { "field": "Entity", "type": "nominal", "title": "Country" },
+    "tooltip": [
+      { "field": "Entity", "title": "Country" },
+      { "field": "Year", "type": "ordinal" },
+      {
+        "field": "Tourism GDP as a proportion of Total",
+        "title": "Tourism GDP % of Total",
+        "format": ".2%"
+      },
+      { "field": "rank", "title": "Rank" }
+    ]
+  },
+
+  "config": {
+    "axis": { "labelFontSize": 12, "titleFontSize": 14 },
+    "legend": { "orient": "right", "titleFontSize": 13, "labelFontSize": 11 }
+  }
+}

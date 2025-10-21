@@ -1,0 +1,98 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Global International Tourist Arrivals by Country (2000-2020)",
+  "width": "container",
+  "height": 500,
+  "params": [
+    {
+      "name": "year_selection",
+      "value": 2015,
+      "bind": {
+        "input": "range",
+        "min": 2000,
+        "max": 2020,
+        "step": 1,
+        "name": "Year: "
+      }
+    },
+    {
+      "name": "zoom_level",
+      "value": 150,
+      "bind": {
+        "input": "range",
+        "min": 80,
+        "max": 400,
+        "step": 10,
+        "name": "Zoom: "
+      }
+    },
+    {
+      "name": "map_center",
+      "value": [0, 20],
+      "bind": {
+        "input": "select",
+        "options": [[0, 20], [100, 10], [-80, 10], [20, 50]],
+        "labels": ["Global", "Asia", "Americas", "Europe"],
+        "name": "Map Center: "
+      }
+    }
+  ],
+  "projection": {
+    "type": "equalEarth",
+    "center": {"expr": "map_center"},
+    "scale": {"expr": "zoom_level"}
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "#e0e0e0", "stroke": "white"}
+    },
+    {
+      "data": {
+        "url": "data/world_tourism_economy_data.csv"
+      },
+      "transform": [
+        {"filter": "datum.year == year_selection"},
+        {
+          "lookup": "country",
+          "from": {
+            "data": {
+              "url": "data/ne_110m_admin_0_countries.topojson",
+              "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+            },
+            "key": "properties.NAME",
+            "fields": ["type", "geometry", "properties"]
+          },
+          "as": "geo"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 0.3},
+      "encoding": {
+        "shape": {"field": "geo", "type": "geojson"},
+        "color": {
+          "field": "tourism_arrivals",
+          "type": "quantitative",
+          "title": "Tourist Arrivals (millions)",
+          "scale": {"scheme": "blues"}
+        },
+        "tooltip": [
+          {"field": "country", "title": "Country"},
+          {
+            "field": "tourism_arrivals",
+            "type": "quantitative",
+            "title": "Arrivals (millions)",
+            "format": ","
+          },
+          {"field": "year", "type": "ordinal"}
+        ]
+      }
+    }
+  ],
+  "config": {
+    "title": {"fontSize": 18, "anchor": "middle"},
+    "legend": {"titleFontSize": 13, "labelFontSize": 11}
+  }
+}
