@@ -1,0 +1,66 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Top 10 Countries by Outbound Tourism Expenditure (2010–2020)",
+  "data": {
+    "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/refs/heads/main/data/20-%20average-expenditures-of-tourists-abroad.csv",
+    "format": {"type": "csv"}
+  },
+  "params": [
+    {
+      "name": "yearFilter",
+      "value": 2018,
+      "bind": {
+        "input": "select",
+        "name": "Select Year: ",
+        "options": [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020],
+        "labels": ["2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"]
+      }
+    }
+  ],
+  "transform": [
+    {"filter": "datum.Year == yearFilter"},
+    {
+      "aggregate": [
+        {
+          "op": "sum",
+          "field": "Outbound Tourism Expenditure (adjusted for US 2021 inflation)",
+          "as": "TotalExp"
+        }
+      ],
+      "groupby": ["Entity"]
+    },
+    {
+      "window": [{"op": "rank", "as": "rankExp"}],
+      "sort": [{"field": "TotalExp", "order": "descending"}]
+    },
+    {"filter": "datum.rankExp <= 10"}
+  ],
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "field": "TotalExp",
+      "type": "quantitative",
+      "title": "Outbound Tourism Expenditure (Billions USD)",
+      "axis": {"format": "~s"}
+    },
+    "y": {
+      "field": "Entity",
+      "type": "nominal",
+      "sort": "-x",
+      "title": null
+    },
+    "tooltip": [
+      {"field": "Entity", "title": "Country"},
+      {
+        "field": "TotalExp",
+        "type": "quantitative",
+        "title": "Expenditure",
+        "format": "$,.2s"
+      }
+    ],
+    "color": {"value": "#1f77b4"}
+  },
+  "config": {
+    "font": "sans-serif"
+  }
+}

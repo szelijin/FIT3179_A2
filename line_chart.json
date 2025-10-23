@@ -1,0 +1,73 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "International tourist arrivals (overnight visitors) for 10 major tourism destinations.",
+  "data": {
+    "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/refs/heads/main/data/world_tourism_economy_data.csv"
+  },
+  "transform": [
+    {
+      "filter": {
+        "field": "country",
+        "oneOf": [
+          "France", "United States", "Mexico", "Spain", "Italy",
+          "Greece", "Germany", "Netherlands", "Austria", "Switzerland"
+        ]
+      }
+    },
+    {
+      "calculate": "toNumber(datum.tourism_arrivals) / 1000000",
+      "as": "arrivals_millions"
+    },
+    {
+      "calculate": "indexof(['France','United States','Mexico'], datum.country) >= 0 ? datum.country : 'Other'",
+      "as": "highlight_group"
+    }
+  ],
+  "width": "container",
+  "height": 420,
+  "mark": {
+    "type": "line",
+    "point": true,
+    "strokeWidth": 2
+  },
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "quantitative",
+      "axis": { "title": "Year", "grid": false }
+    },
+    "y": {
+      "field": "arrivals_millions",
+      "type": "quantitative",
+      "axis": { "title": "Tourist Arrivals (millions)" }
+    },
+    "color": {
+      "field": "highlight_group",
+      "type": "nominal",
+      "scale": {
+        "domain": ["France", "United States", "Mexico", "Other"],
+        "range": ["#1f77b4", "#9467bd", "#ff7f0e", "#bfbfbf"]
+      },
+      "legend": {"title": "Highlighted Countries"}
+    },
+    "opacity": {
+      "condition": {"test": "datum.highlight_group == 'Other'", "value": 0.5},
+      "value": 1
+    },
+    "detail": {"field": "country"},
+    "tooltip": [
+      {"field": "country", "title": "Country"},
+      {"field": "year", "type": "quantitative"},
+      {
+        "field": "arrivals_millions",
+        "type": "quantitative",
+        "title": "Arrivals (millions)",
+        "format": ".1f"
+      }
+    ]
+  },
+  "config": {
+    "legend": { "titleFontSize": 12, "labelFontSize": 11 },
+    "font": "sans-serif"
+  }
+}

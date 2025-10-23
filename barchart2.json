@@ -1,0 +1,58 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Top 10 countries by tourism GDP proportion (2010–2020).",
+  "data": {
+    "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/refs/heads/main/data/7-%20tourism-gdp-proportion-of-total-gdp%20(1).csv",
+    "format": {"type": "csv"}
+  },
+  "params": [
+    {
+      "name": "yearFilter",
+      "value": 2018,
+      "bind": {
+        "input": "select",
+        "name": "Select Year: ",
+        "options": [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020],
+        "labels": ["2010","2011","2012","2013","2014","2015","2016","2017","2018","2019","2020"]
+      }
+    }
+  ],
+  "transform": [
+    { "filter": "datum.Year == yearFilter" },
+    { "calculate": "toNumber(datum['Tourism GDP as a proportion of Total'])", "as": "TourismGDPShare" },
+    {
+      "window": [
+        { "op": "rank", "as": "rankShare" }
+      ],
+      "sort": [
+        { "field": "TourismGDPShare", "order": "descending" }
+      ]
+    },
+    { "filter": "datum.rankShare <= 10" }
+  ],
+  "mark": "bar",
+  "encoding": {
+    "x": {
+      "field": "TourismGDPShare",
+      "type": "quantitative",
+      "title": "Tourism GDP (% of total GDP)",
+      "axis": {"format": ".1f"}
+    },
+    "y": {
+      "field": "Entity",
+      "type": "nominal",
+      "sort": "-x",
+      "title": "Country"
+    },
+    "color": { "value": "#9467bd" },
+    "tooltip": [
+      {
+        "field": "TourismGDPShare",
+        "type": "quantitative",
+        "title": "Tourism GDP %",
+        "format": ".2f"
+      },
+      { "field": "Year", "title": "Year" }
+    ]
+  }
+}

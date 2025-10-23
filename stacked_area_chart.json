@@ -1,0 +1,95 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Stacked area chart with linked brushing to filter years.",
+  "data": {
+    "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/refs/heads/main/data/international-tourist-arrivals-by-world-region.csv"
+  },
+
+  "vconcat": [
+    {
+      "width": "container",
+      "height": 260,
+      "mark": {
+        "type": "area",
+        "interpolate": "monotone",
+        "opacity": 0.85
+      },
+      "transform": [
+        { "filter": { "param": "year_brush" } }
+      ],
+      "encoding": {
+        "x": {
+          "field": "Year",
+          "type": "temporal",
+          "title": "",
+          "axis": { "grid": false }
+        },
+        "y": {
+          "aggregate": "sum",
+          "field": "International Tourist Arrivals",
+          "type": "quantitative",
+          "title": "Total Tourist Arrivals"
+        },
+        "color": {
+          "field": "Entity",
+          "type": "nominal",
+          "title": "Region",
+          "legend": { "orient": "bottom", "title": "Region" }
+        },
+        "tooltip": [
+          { "field": "Entity", "title": "Region" },
+          { "field": "Year", "type": "temporal" },
+          {
+            "field": "International Tourist Arrivals",
+            "type": "quantitative",
+            "title": "Tourists"
+          }
+        ]
+      }
+    },
+
+    {
+      "width": "container",
+      "height": 80,
+      "title": {
+        "text": "Drag across the overview chart below to filter years above",
+        "fontSize": 12,
+        "anchor": "middle"
+      },
+      "mark": {
+        "type": "area",
+        "interpolate": "monotone",
+        "opacity": 0.7
+      },
+      "params": [
+        {
+          "name": "year_brush",
+          "select": {
+            "type": "interval",
+            "encodings": ["x"]
+          }
+        }
+      ],
+      "encoding": {
+        "x": {
+          "field": "Year",
+          "type": "temporal",
+          "title": "Year"
+        },
+        "y": {
+          "aggregate": "sum",
+          "field": "International Tourist Arrivals",
+          "type": "quantitative",
+          "axis": null
+        },
+        "color": {
+          "field": "Entity",
+          "type": "nominal",
+          "legend": null
+        }
+      }
+    }
+  ],
+
+  "font": "sans-serif"
+}

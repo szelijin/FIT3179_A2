@@ -4,7 +4,7 @@
   "height": 550,
   "title": "GDP vs Tourism Receipts (Major Countries)",
   "data": {
-    "url": "data/world_tourism_economy_data.csv"
+    "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/refs/heads/main/data/world_tourism_economy_data.csv"
   },
   "params": [
     {

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Global International Tourist Arrivals (2020)",
+  "width": "container",
+  "height": 520,
+
+  "params": [
+    {
+      "name": "zoom_level",
+      "value": 150,
+      "bind": {
+        "input": "range",
+        "min": 80,
+        "max": 400,
+        "step": 10,
+        "name": "Zoom: "
+      }
+    },
+    {
+      "name": "center_to",
+      "value": [0, 20],
+      "bind": {
+        "input": "select",
+        "options": [
+          [0,20],
+          [100,10],
+          [-80,10],
+          [20,50]
+        ],
+        "labels": ["Global","Asia","Americas","Europe"],
+        "name": "Map Centre: "
+      }
+    }
+  ],
+
+  "projection": {
+    "type": "equalEarth",
+    "center": {"expr": "center_to"},
+    "scale": {"expr": "zoom_level"}
+  },
+
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/main/data/oceans.topojson",
+        "format": {"type": "topojson", "feature": "oceans"}
+      },
+      "mark": {"type": "geoshape", "fill": "#cce5f6"}
+    },
+
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/main/data/WorldMapWithGraticules.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_graticules_30"}
+      },
+      "mark": {"type": "geoshape", "fill": null, "stroke": "#cccccc", "strokeWidth": 0.5}
+    },
+
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/main/data/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "#f2f2f2", "stroke": "#ffffff", "strokeWidth": 0.6}
+    },
+
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/main/data/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "transform": [
+        {
+          "lookup": "properties.ISO_A3",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/main/data/world_tourism_economy_data.csv",
+              "format": {"type": "csv"},
+              "transform": [{"filter": "datum.year == 2020"}]
+            },
+            "key": "country_code",
+            "fields": ["country", "tourism_arrivals"]
+          },
+          "as": ["country", "tourism_arrivals"]
+        },
+        {
+          "calculate": "datum.tourism_arrivals <= 100000 ? '0-100k' : datum.tourism_arrivals <= 1000000 ? '100k-1M' : datum.tourism_arrivals <= 10000000 ? '1M-10M' : datum.tourism_arrivals <= 50000000 ? '10M-50M' : '>50M'",
+          "as": "arrivals_category"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "#fff", "strokeWidth": 0.4},
+      "encoding": {
+        "shape": {"field": "geometry", "type": "geojson"},
+        "color": {
+          "field": "arrivals_category",
+          "type": "nominal",
+          "title": "Tourist Arrivals",
+          "scale": {
+            "domain": ["0-100k", "100k-1M", "1M-10M", "10M-50M", ">50M"],
+            "range": ["#f7f0eb", "#d9cab3", "#a67c52", "#6e4a25", "#3b1f0e"]
+          },
+          "legend": {"title": "Tourist Arrivals"}
+        },
+        "tooltip": [
+          {"field": "country", "title": "Country"},
+          {"field": "tourism_arrivals", "type": "quantitative", "title": "Arrivals", "format": ","},
+          {"field": "arrivals_category", "title": "Category"}
+        ]
+      }
+    }
+  ],
+
+  "config": {
+    "title": {"anchor": "middle", "fontSize": 16},
+    "legend": {"orient": "right", "titleFontSize": 12, "labelFontSize": 11}
+  }
+}

@@ -1,145 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Global Tourism Dashboard</title>
+  <meta charset="utf-8" />
+  <title>Global Tourism Insights Dashboard</title>
 
   <!-- Vega & Vega-Lite -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
-  <!-- CSS -->
+  <!-- PureCSS & Fonts -->
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
+  <!-- Project CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 </head>
 <body>
   <div class="page">
 
-    <div class="pure-g">
-      <div class="pure-u-1-1">
-        <h1>🌍 Global Tourism Dashboard</h1>
-        <p>An interactive overview of international tourism trends across regions and economies.</p>
-      </div>
-    </div>
+    <!-- Title -->
+    <header class="header">
+      <h1>Global Tourism Insights</h1>
+      <p class="intro">Interactive views of international tourist arrivals, economic impact and top destinations. Use selectors and the brush tool to explore time ranges and compare countries.</p>
+    </header>
 
-    <!-- Visualization 1: Tourist arrivals by world region -->
-    <div class="pure-g">
-      <div class="pure-u-1-2">
-        <div class="description description-left">
-          <h2>Tourist Arrivals by Region (1995–2020)</h2>
-          <p>This area chart shows how international tourist arrivals evolved across different regions.</p>
+    <!-- Stacked area (full width) -->
+    <section class="pure-g">
+      <div class="pure-u-1">
+        <div class="card">
+          <div class="card-head">
+            <h2>Evolution of Tourist Arrivals by Region (1950–2020)</h2>
+            <p class="lead">Regional patterns over seven decades — brush the overview to zoom the main chart above.</p>
+          </div>
+          <div class="vis-wrapper">
+            <div id="vis1" class="vis-container"></div>
+          </div>
         </div>
       </div>
-      <div class="pure-u-1-2">
-        <div id="vis1" class="vis-container"></div>
-      </div>
-    </div>
+    </section>
 
-    <!-- Visualization 2: Tourism receipts vs GDP -->
-    <div class="pure-g">
-      <div class="pure-u-2-3">
-        <div id="vis2" class="vis-container"></div>
-      </div>
-      <div class="pure-u-1-3">
-        <div class="description description-right">
-          <h2>Tourism Receipts vs GDP</h2>
-          <p>Explore how tourism revenue contributes to national GDP over the years.</p>
+    <!-- Choropleth Map (full width) -->
+    <section class="pure-g">
+      <div class="pure-u-1">
+        <div class="card">
+          <div class="card-head">
+            <h2>Global Distribution of Tourist Arrivals</h2>
+            <p class="lead">Use the year slider to watch how international arrivals shift across countries.</p>
+          </div>
+          <div class="vis-wrapper">
+            <div id="mapVis" class="vis-container"></div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Visualization 3: Top tourism countries -->
-    <div class="pure-g">
-      <div class="pure-u-1-3">
-        <div class="description description-left">
-          <h2>Top 10 Countries by Tourism Receipts</h2>
-          <p>Which countries earned the most from international visitors?</p>
+    <!-- Line chart (full width, text above) -->
+    <section class="pure-g">
+    <div class="pure-u-1">
+        <div class="card">
+        <div class="card-head">
+            <h2>Tourism Trend (1998–2020)</h2>
+            <p class="lead">
+            Longer-term trends show growth and notable downturns. Examine specific countries using the charts below to see how individual economies responded to shocks.
+            </p>
         </div>
-      </div>
-      <div class="pure-u-2-3">
-        <div id="vis3" class="vis-container"></div>
-      </div>
-    </div>
-
-    <!-- Visualization 4: Departures vs Expenditures -->
-    <div class="pure-g">
-      <div class="pure-u-2-3">
-        <div id="vis4" class="vis-container"></div>
-      </div>
-      <div class="pure-u-1-3">
-        <div class="description description-right">
-          <h2>Departures vs Expenditures</h2>
-          <p>Analyze the relationship between outbound tourism and spending abroad.</p>
+        <div class="vis-wrapper">
+            <div id="vis2" class="vis-container"></div>
         </div>
-      </div>
-    </div>
-
-    <!-- Visualization 5: Global Tourist Arrivals Map -->
-    <div class="pure-g">
-    <div class="pure-u-1-1">
-        <div class="description" style="text-align:center;">
-        <h2>🌐 Global Tourist Arrivals by Country</h2>
-        <p>Use the year slider to explore changes in international tourist arrivals across the world.</p>
-        </div>
-        <div id="mapVis" class="vis-container"></div>
-    </div>
-    </div>
-
-    <div class="pure-g">
-      <div class="pure-u-1-1 small-font">
-        <p>Data source: UNWTO | Built by <a href="#">Li Jin Sze</a></p>
-      </div>
-    </div>
-    
-    <!-- Visualization 6: GDP vs Tourism Receipts Scatterplot -->
-    <div class="pure-g">
-    <div class="pure-u-1-1">
-        <div class="description" style="text-align:center;">
-        <h2>💰 GDP vs Tourism Receipts (Major Countries)</h2>
-        <p>Bubble size shows tourist arrivals. Use the dropdown to select a year.</p>
-        </div>
-        <div id="scatterVis" class="vis-container"></div>
-    </div>
-    </div>
-
-    <!-- Visualization 5: Tourism GDP Proportion Bump Chart -->
-    <div class="pure-g">
-    <div class="pure-u-1-3">
-        <div class="description description-left">
-        <h2>Tourism GDP Proportion Ranking</h2>
-        <p>Tracks the top 10 countries where tourism contributes the most to GDP (2010-2020).</p>
         </div>
     </div>
-    <div class="pure-u-2-3">
-        <div id="vis5" class="vis-container"></div>
-    </div>
-    </div>
+    </section>
 
 
+    <!-- Scatterplot full width -->
+    <section class="pure-g">
+      <div class="pure-u-1">
+        <div class="card">
+          <div class="card-head">
+            <h2>GDP vs Tourism Receipts (Major Countries)</h2>
+            <p class="lead">Bubble size indicates tourist arrivals. Use the year control to change the year of observation.</p>
+          </div>
+          <div class="vis-wrapper">
+            <div id="scatterVis" class="vis-container"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bar Chart 1 Row -->
+    <section class="row-flex triple-row">
+    <!-- Chart -->
+    <div class="col-chart">
+        <div class="card same-height">
+        <div class="vis-wrapper">
+            <div id="barchart1" class="vis-container"></div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Insight Text -->
+    <div class="col-insight">
+        <div class="card same-height insight">
+        <h3>Why the U.S., Germany & France spend the most</h3>
+        <p><strong>High purchasing power</strong> and strong travel culture drive
+            outbound spending. Extensive global air connectivity amplifies tourism flows.</p>
+        </div>
+    </div>
+
+    <!-- Key Insights -->
+    <div class="col-keys">
+        <div class="card same-height keys">
+        <h4>Quick Facts</h4>
+        <ul>
+            <li><span class="value">🇺🇸 $186B</span> outbound spend — <strong>#1 worldwide</strong></li>
+            <li><span class="value">🇩🇪 $104B</span> — strong culture of foreign travel</li>
+            <li><span class="value">🇫🇷 $42B</span> — boosted by business & intra-EU travel</li>
+            <li><span class="value">2.5×</span> more spent by U.S. vs France</li>
+            <li><span class="value">>70%</span> of spending from high-income nations</li>
+        </ul>
+        </div>
+    </div>
+    </section>
+
+
+    <!-- Bar Chart 2 Row -->
+    <section class="row-flex triple-row">
+    <!-- Chart -->
+    <div class="col-chart">
+        <div class="card same-height">
+        <div class="vis-wrapper">
+            <div id="barchart2" class="vis-container"></div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Insight Text -->
+    <div class="col-insight">
+        <div class="card same-height insight">
+        <h3>Why Macao & Pacific Islands rely heavily on tourism</h3>
+        <p><strong>Small domestic markets</strong> mean tourism drives economic growth.
+            Resort-centric and gaming economies make them highly sensitive to global travel shifts.</p>
+        </div>
+    </div>
+
+    <!-- Key Insights -->
+    <div class="col-keys">
+        <div class="card same-height keys">
+        <h4>Key Dependencies</h4>
+        <ul>
+            <li><span class="value">🇲🇴 Macao: ~60%</span> of GDP from tourism</li>
+            <li><span class="value">🏝 Maldives: ~34%</span> tourism share</li>
+            <li><span class="value">🌊 Pacific Islands: 25–40%</span> reliance range</li>
+            <li><span class="value">1 in 3</span> jobs linked to tourism</li>
+            <li><span class="value">High risk</span> during global crises like COVID-19</li>
+        </ul>
+        </div>
+    </div>
+    </section>
+
+
+
+
+
+    <footer class="footer-text">
+      Data sources: UNWTO, World Bank. Dashboard built by <strong>Li Jin Sze</strong>.
+    </footer>
   </div>
 
-  <script type="text/javascript">
+  <script>
     const visFiles = [
-        ["#vis1", "tourism_area.json"],
-        ["#vis2", "vis2_tourism_vs_gdp.json"],
-        ["#vis3", "vis3_top_countries_receipts.json"],
-        ["#mapVis", "choropleth_map.vg.json"],
-        ["#scatterVis", "scatter_gdp_vs_receipts.json"],
-        ["#vis5", "gdp_proportion_bumpchart.json"]  // ← add this
+      ["#vis1", "stacked_area_chart.json"],
+      ["#mapVis", "choropleth_map.json"],
+      ["#vis2", "line_chart.json"],
+      ["#scatterVis", "scatter_gdp_vs_receipts.json"],
+      ["#barchart1", "barchart1.json"],
+      ["#barchart2", "barchart2.json"]
     ];
 
-  visFiles.forEach(v => {
-    vegaEmbed(v[0], v[1], { actions: false }).catch(console.error);
-  });
-</script>
-
-
     visFiles.forEach(v => {
-        vegaEmbed(v[0], v[1], { actions: false }).catch(console.error);
+      // keep renderer canvas and let Vega fit inside container; charts should include autosize: {type:"fit"}
+      vegaEmbed(v[0], v[1], { actions: false, renderer: "canvas" })
+        .then(result => {
+          // ensure the view resizes to parent container after embed (helps with some browsers)
+          try { result.view.sig('width', result.view.width()); } catch(e){}
+        })
+        .catch(err => console.error("embed error:", err));
     });
-    </script>
-
+  </script>
 </body>
 </html>

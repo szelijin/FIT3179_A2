@@ -1,74 +1,59 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Interactive area chart showing global international tourist arrivals aggregated by year (in millions).",
+  "description": "Tourism Arrivals Over Time for Top 10 Tourist Destination Countries",
   "data": {
-    "url": "data/international-tourist-arrivals-by-world-region.csv"
+    "url": "https://raw.githubusercontent.com/szelijin/FIT3179_A2/main/data/world_tourism_economy_data.csv"
   },
   "transform": [
     {
-      "aggregate": [
-        { "op": "sum", "field": "International Tourist Arrivals", "as": "TotalArrivals" }
-      ],
-      "groupby": ["Year"]
-    },
-    {
-      "calculate": "datum.TotalArrivals / 1000000",
-      "as": "TotalArrivals_Millions"
-    }
-  ],
-  "vconcat": [
-    {
-      "width": "container",
-      "height": 240,
-      "mark": { "type": "area", "color": "#1f77b4", "interpolate": "monotone" },
-      "encoding": {
-        "x": {
-          "field": "Year",
-          "type": "temporal",
-          "scale": { "domain": { "param": "brush" } },
-          "axis": { "title": "" }
-        },
-        "y": {
-          "field": "TotalArrivals_Millions",
-          "type": "quantitative",
-          "axis": { "title": "Total International Tourist Arrivals (in millions)" }
-        },
-        "tooltip": [
-          { "field": "Year", "type": "temporal" },
-          { "field": "TotalArrivals_Millions", "type": "quantitative", "title": "Arrivals (millions)", "format": ".2f" }
+      "filter": {
+        "field": "country",
+        "oneOf": [
+          "France", "Spain", "United States", "China",
+          "Italy", "Turkey", "Mexico", "Thailand",
+          "Germany", "United Kingdom"
         ]
       }
     },
     {
-      "width": "container",
-      "height": 80,
-      "title": {
-        "text": "Drag across this chart to zoom or focus on specific years above",
-        "anchor": "middle",
-        "fontSize": 11,
-        "fontWeight": "normal",
-        "color": "#555",
-        "dy": -5
-      },
-      "mark": { "type": "area", "color": "#1f77b4", "interpolate": "monotone" },
-      "params": [
-        {
-          "name": "brush",
-          "select": { "type": "interval", "encodings": ["x"] }
-        }
-      ],
-      "encoding": {
-        "x": {
-          "field": "Year",
-          "type": "temporal",
-          "axis": { "title": "Year" }
-        },
-        "y": {
-          "field": "TotalArrivals_Millions",
-          "type": "quantitative",
-          "axis": { "tickCount": 3, "grid": false }
-        }
-      }
+      "filter": "isValid(datum.tourism_arrivals)"
+    },
+    {
+      "calculate": "toNumber(datum.tourism_arrivals)",
+      "as": "Arrivals"
     }
-  ]
+  ],
+  "width": "container",
+  "height": 400,
+  "mark": {
+    "type": "line",
+    "point": true
+  },
+  "encoding": {
+    "x": {
+      "field": "year",
+      "type": "temporal",
+      "axis": {"title": "Year"}
+    },
+    "y": {
+      "field": "Arrivals",
+      "type": "quantitative",
+      "axis": {"title": "Tourism Arrivals (Number of Tourists)"}
+    },
+    "color": {
+      "field": "country",
+      "type": "nominal",
+      "legend": {"title": "Country"}
+    },
+    "tooltip": [
+      {"field": "country", "type": "nominal", "title": "Country"},
+      {"field": "year", "type": "temporal", "title": "Year"},
+      {
+        "field": "Arrivals",
+        "type": "quantitative",
+        "title": "Tourism Arrivals",
+        "format": ","
+      }
+    ]
+  }
 }
